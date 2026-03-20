@@ -1,0 +1,7 @@
+venv/
+.env
+__pycache__/
+*.pyc
+data/datasets/color/
+data/models/*.keras
+data/models/*.h5
