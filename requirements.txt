@@ -9,5 +9,3 @@ Pillow
 plotly
 groq
 google-genai
-tf-keras
-tensorflow-cpu
