@@ -260,8 +260,8 @@ Open → `http://localhost:8501`
 
 ## 👨‍💻 Author
 
-**Aniket**
-B.Tech Student | AI & Agriculture Enthusiast
+**Anike Dombale**
+
 GitHub: [@aniketd33](https://github.com/aniketd33)
 
 ---
