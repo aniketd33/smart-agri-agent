@@ -1,8 +1,6 @@
 # 🌾 Smart Agricultural Agent
 ### AI-Powered Farming Assistant for Indian Farmers
 
-![Python](https://img.shields.io/badge/Python-3.10+-blue) ![Streamlit](https://img.shields.io/badge/Streamlit-1.32+-red) ![TensorFlow](https://img.shields.io/badge/TensorFlow-2.21-orange) ![License](https://img.shields.io/badge/License-Educational-green)
-
 ---
 
 ## 📌 Project Name
