@@ -4,6 +4,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 import streamlit as st
 from utils.config import APP_NAME, APP_ICON
+from utils.language import render_language_sidebar   # ← import karo
 
 st.set_page_config(
     page_title=APP_NAME,
@@ -11,25 +12,32 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title(f"{APP_ICON} {APP_NAME}")
-st.markdown("### Your AI-powered farming assistant")
+# ============================================
+# LANGUAGE SIDEBAR — render karo
+# T mein sari translations hain
+# ============================================
+T, lang_key = render_language_sidebar()
 
+# ============================================
+# MAIN UI
+# ============================================
+st.title(f"{APP_ICON} {APP_NAME}")
+st.markdown(T["subtitle"])
 st.markdown("---")
 
 col1, col2, col3 = st.columns(3)
-
 with col1:
-    st.info("🌱 **Crop Recommendation**\nGet crop suggestions based on your soil & location")
+    st.info(T["feat_crop"])
 with col2:
-    st.info("🔬 **Disease Detection**\nUpload a leaf photo to detect crop disease")
+    st.info(T["feat_disease"])
 with col3:
-    st.info("🌦️ **Weather Forecast**\nReal-time weather for your farm location")
+    st.info(T["feat_weather"])
 
 col4, col5 = st.columns(2)
 with col4:
-    st.info("🤖 **AI Farm Assistant**\nChat with an AI trained on agriculture")
+    st.info(T["feat_ai"])
 with col5:
-    st.info("📈 **Price Prediction**\nForecast crop prices before you sell")
+    st.info(T["feat_price"])
 
 st.markdown("---")
-st.caption("Use the sidebar to navigate between features.")
+st.caption(T["footer"])
