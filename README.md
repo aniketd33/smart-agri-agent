@@ -88,33 +88,7 @@ This project was independently designed, developed, and deployed by **Aniket** a
 ---
 
 ## 🏗️ System Architecture
-
-```
-User (Browser)
-      │
-      ▼
-┌─────────────────────────────────────┐
-│         Streamlit Frontend          │
-│  app.py + 5 pages (sidebar nav)     │
-└──────────────┬──────────────────────┘
-               │
-       ┌───────┴────────┐
-       ▼                ▼
-┌─────────────┐  ┌─────────────────┐
-│  ML Modules │  │   API Modules   │
-│ crop_rec    │  │ weather_module  │
-│ disease_det │  │ chat_agent      │
-│ price_pred  │  │ (Groq/LLaMA)    │
-└──────┬──────┘  └─────────────────┘
-       │
-       ▼
-┌─────────────────────┐
-│     Data Layer      │
-│  data/models/*.pkl  │
-│  data/models/*.keras│
-│  data/datasets/*.csv│
-└─────────────────────┘
-```
+<img width="1440" height="1948" alt="image" src="https://github.com/user-attachments/assets/39e6b1c6-5667-4fd8-92c0-6b1068b9d45d" />
 
 ---
 
