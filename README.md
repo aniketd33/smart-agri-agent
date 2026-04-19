@@ -238,11 +238,6 @@ Open → `http://localhost:8501`
 
 GitHub: [@aniketd33](https://github.com/aniketd33)
 
----
-
-## 📄 License
-
-This project is developed for educational and academic purposes.
 
 ---
 
