@@ -6,7 +6,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from PIL import Image
 from geopy.geocoders import Nominatim
-from utils.language import render_language_sidebar   # ← import karo
+from utils.language import render_language_sidebar
 
 try:
     from modules.disease_detector import predict_disease
@@ -16,14 +16,8 @@ except Exception:
 
 st.set_page_config(page_title="Disease Detection", page_icon="🔬", layout="wide")
 
-# ============================================
-# LANGUAGE — ek line, sab kuch ready
-# ============================================
 T, lang_key = render_language_sidebar()
 
-# ============================================
-# TREATMENT DATA
-# ============================================
 TREATMENTS = {
     "early blight": {
         "en": "Apply copper-based fungicide. Remove infected leaves.",
@@ -75,9 +69,6 @@ TREATMENTS = {
     },
 }
 
-# ============================================
-# FUNCTIONS
-# ============================================
 def get_treatment(disease, lang_key):
     for key, data in TREATMENTS.items():
         if key in disease.lower():
@@ -91,38 +82,49 @@ def get_treatment(disease, lang_key):
 
 def get_nearby_shops(city):
     try:
-        geolocator = Nominatim(user_agent="agro_disease_app_v3")
-        location = geolocator.geocode(city, timeout=10)
+        geolocator = Nominatim(user_agent="agro_app_v5")
+        location = geolocator.geocode(city, timeout=15)
         if not location:
-            return [], "City not found. Try a different name."
+            return [], "City not found."
 
         lat, lon = location.latitude, location.longitude
         query = f"""
-        [out:json][timeout:25];
+        [out:json][timeout:40];
         (
-          node["shop"="agrarian"](around:10000,{lat},{lon});
-          node["shop"="garden_centre"](around:10000,{lat},{lon});
-          node["name"~"agro|krishi|kisan|farm|nursery",i](around:10000,{lat},{lon});
+          node["shop"="agrarian"](around:15000,{lat},{lon});
+          node["shop"="garden_centre"](around:15000,{lat},{lon});
+          node["name"~"agro|krishi|kisan|farm|nursery",i](around:15000,{lat},{lon});
         );
-        out body 6;
+        out body 8;
         """
-        response = requests.post(
+
+        endpoints = [
             "https://overpass-api.de/api/interpreter",
-            data={"data": query},
-            timeout=30,
-        )
-        if response.status_code != 200 or not response.text.strip():
-            return [], "API not responding. Try again later."
-        return response.json().get("elements", []), None
+            "https://maps.mail.ru/osm/tools/overpass/api/interpreter",
+            "https://overpass.kumi.systems/api/interpreter",
+        ]
 
-    except requests.exceptions.Timeout:
-        return [], "Request timed out. Try again."
+        for endpoint in endpoints:
+            try:
+                resp = requests.post(
+                    endpoint,
+                    data={"data": query},
+                    timeout=35,
+                    headers={"User-Agent": "AgroApp/1.0"}
+                )
+                if resp.status_code == 200 and resp.text.strip():
+                    elements = resp.json().get("elements", [])
+                    if elements:
+                        return elements, None
+            except:
+                continue
+
+        return [], None  # fallback to Google Maps
+
     except Exception as e:
-        return [], f"Error: {str(e)}"
+        return [], None
 
-# ============================================
-# MAIN UI
-# ============================================
+# ── MAIN UI ──
 st.title(T["dd_title"])
 st.markdown(T["dd_subtitle"])
 st.markdown("---")
@@ -148,7 +150,6 @@ if uploaded_file:
         if not DISEASE_MODEL_AVAILABLE:
             st.warning(T["dd_local_only"])
             st.info(T["dd_run_local"])
-
         else:
             with st.spinner("Analyzing..."):
                 results = predict_disease(image)
@@ -173,7 +174,6 @@ if uploaded_file:
                 )
 
     if DISEASE_MODEL_AVAILABLE:
-        # Treatment Section
         st.markdown("---")
         st.subheader(T["dd_treatment"])
 
@@ -202,7 +202,7 @@ if uploaded_file:
 | {T['dd_confidence']} | {top['confidence']}% |
             """)
 
-        # Nearby Shops Section
+        # ── Nearby Shops ──
         st.markdown("---")
         st.subheader(T["dd_shops"])
 
@@ -213,13 +213,13 @@ if uploaded_file:
         )
 
         if st.button(T["dd_search"]):
-            with st.spinner("Searching..."):
+            with st.spinner("Searching nearby agro shops..."):
                 shops, error = get_nearby_shops(city)
 
             if error:
                 st.error(f"❌ {error}")
-                st.info(T["dd_google_tip"])
-            elif shops:
+
+            if shops:
                 st.success(f"✅ {len(shops)} {T['dd_found']}")
                 for shop in shops:
                     tags  = shop.get("tags", {})
@@ -243,5 +243,7 @@ if uploaded_file:
                             )
                             st.link_button(T["dd_maps"], maps_url)
             else:
-                st.warning(f"⚠️ {T['dd_no_shops']}")
+                st.warning("⚠️ No agro shops found via OpenStreetMap.")
+                maps_url = f"https://www.google.com/maps/search/agro+shop+near+{city}"
+                st.link_button("🗺️ Search on Google Maps", maps_url)
                 st.info(T["dd_google_tip"])
