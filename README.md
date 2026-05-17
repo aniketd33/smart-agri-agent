@@ -233,9 +233,8 @@ Open → `http://localhost:8501`
 ---
 
 ## 👨‍💻 Author
-
-**Anike Dombale**
-
+**Aniket Dombale**
+aniketdombale329@gmail.com
 GitHub: [@aniketd33](https://github.com/aniketd33)
 
 
