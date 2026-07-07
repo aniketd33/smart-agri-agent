@@ -215,12 +215,6 @@ Open → `http://localhost:8501`
 
 ---
 
-## 🌐 Live Demo
-
-🚀 **[Click here to try the app](https://share.streamlit.io/aniketd33/smart-agri-agent)**
-
----
-
 ## 🔮 Future Scope
 
 - Hindi and Marathi language support for rural farmers
